@@ -123,23 +123,23 @@ namespace Delete_data
         {
             SqlCommand cmd = new SqlCommand("SELECT * FROM Almarhumm", conn);
             SqlDataReader reader = cmd.ExecuteReader();
-            if (reader.HasRows)
+            while (reader.Read())
             {
-                while (reader.Read())
-                {
-                    Console.WriteLine("Id_Almarhumm: " + reader.GetString(0));
-                    Console.WriteLine("Nama: " + reader.GetString(1));
-                    Console.WriteLine("Tgl_Lahir: " + reader.GetDateTime(2).ToString("yyyy-MM-dd"));
-                    Console.WriteLine("Tgl_Kematian: " + reader.GetDateTime(3).ToString("yyyy-MM-dd"));
-                    Console.WriteLine("Penyebab_Kematian: " + reader.GetString(4));
-                    Console.WriteLine();
-                }
+                Console.WriteLine("Id_Almarhumm: " + reader["Id_Almarhumm"].ToString());
+                Console.WriteLine("Nama: " + reader["Nama"].ToString());
+                Console.WriteLine("Tgl_Lahir: " + GetDateTimeSafe(reader, "Tgl_Lahir").ToString("yyyy-MM-dd"));
+                Console.WriteLine("Tgl_Kematian: " + GetDateTimeSafe(reader, "Tgl_Kematian").ToString("yyyy-MM-dd"));
+                Console.WriteLine("Penyebab_Kematian: " + reader["Penyebab_Kematian"].ToString());
+                Console.WriteLine();
             }
-            else
-            {
-                Console.WriteLine("Tidak ada data almarhumm.");
-            }
-            reader.Close();
+            reader.Close(); // Close the SqlDataReader after reading data
+        }
+
+        // Method untuk mendapatkan nilai DateTime dari SqlDataReader dengan penanganan nilai null
+        private DateTime GetDateTimeSafe(SqlDataReader reader, string columnName)
+        {
+            int ordinal = reader.GetOrdinal(columnName);
+            return reader.IsDBNull(ordinal) ? DateTime.MinValue : reader.GetDateTime(ordinal);
         }
 
         // Method untuk menambah data almarhumm
@@ -147,6 +147,23 @@ namespace Delete_data
         {
             Console.WriteLine("Masukkan Id Almarhumm: ");
             string Id_Almarhumm = Console.ReadLine();
+            if (string.IsNullOrEmpty(Id_Almarhumm))
+            {
+                Console.WriteLine("ID tidak boleh kosong.");
+                return;
+            }
+
+            // Check if the record already exists
+            string queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
+            SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
+            cmdCheck.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
+            int existingRecords = (int)cmdCheck.ExecuteScalar();
+            if (existingRecords > 0)
+            {
+                Console.WriteLine("Data dengan ID yang sama sudah ada.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Nama Almarhumm: ");
             string Nama = Console.ReadLine();
             Console.WriteLine("Masukkan Tanggal Lahir (yyyy-MM-dd): ");
@@ -181,6 +198,17 @@ namespace Delete_data
             Console.WriteLine("Masukkan ID Almarhumm yang akan dihapus: ");
             string Id_Almarhumm = Console.ReadLine();
 
+            // Check if the record exists
+            string queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
+            SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
+            cmdCheck.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
+            int existingRecords = (int)cmdCheck.ExecuteScalar();
+            if (existingRecords == 0)
+            {
+                Console.WriteLine("Data dengan ID yang dimasukkan tidak ditemukan.");
+                return;
+            }
+
             string query = "DELETE FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
             SqlCommand cmd = new SqlCommand(query, conn);
             cmd.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
@@ -200,6 +228,23 @@ namespace Delete_data
         {
             Console.WriteLine("Masukkan ID Almarhumm yang akan diperbarui: ");
             string Id_Almarhumm = Console.ReadLine();
+            if (string.IsNullOrEmpty(Id_Almarhumm))
+            {
+                Console.WriteLine("ID tidak boleh kosong.");
+                return;
+            }
+
+            // Check if the record exists
+            string queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
+            SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
+            cmdCheck.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
+            int existingRecords = (int)cmdCheck.ExecuteScalar();
+            if (existingRecords == 0)
+            {
+                Console.WriteLine("Data dengan ID yang dimasukkan tidak ditemukan.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Nama Almarhumm: ");
             string newNama = Console.ReadLine();
             Console.WriteLine("Masukkan Tanggal Lahir (yyyy-MM-dd): ");
@@ -244,6 +289,12 @@ namespace Delete_data
         {
             Console.WriteLine("Masukkan Id_Almarhumm: ");
             string Id_Almarhumm = Console.ReadLine();
+            if (string.IsNullOrEmpty(Id_Almarhumm))
+            {
+                Console.WriteLine("ID tidak boleh kosong.");
+                return;
+            }
+
             Console.WriteLine("\nMasukkan detail tentang kematian:");
             Console.WriteLine("Masukkan Tanggal Kematian (yyyy-MM-dd): ");
             DateTime tglKematian = DateTime.Parse(Console.ReadLine());
