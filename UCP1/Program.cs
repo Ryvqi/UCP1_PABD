@@ -92,7 +92,8 @@ namespace Delete_data
                 Console.WriteLine("2. Update Data Almarhumm");
                 Console.WriteLine("3. Tambah Data Almarhumm");
                 Console.WriteLine("4. Hapus Data Almarhumm");
-                Console.WriteLine("\nEnter your choice (1-4): ");
+                Console.WriteLine("5. Kembali ke Menu Utama");
+                Console.WriteLine("\nEnter your choice (1-5): ");
 
                 char choice = Convert.ToChar(Console.ReadLine());
 
@@ -110,6 +111,8 @@ namespace Delete_data
                     case '4':
                         DeleteDeath(conn);
                         break;
+                    case '5':
+                        return;
                     default:
                         Console.Clear();
                         Console.WriteLine("\nInvalid option");
