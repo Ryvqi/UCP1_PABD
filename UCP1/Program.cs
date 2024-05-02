@@ -184,7 +184,6 @@ namespace Delete_data
                 return;
             }
 
-            // Check if the record already exists
             queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Nama = @Nama";
             cmdCheck = new SqlCommand(queryCheck, conn);
             cmdCheck.Parameters.AddWithValue("@Nama", Nama);
@@ -269,7 +268,6 @@ namespace Delete_data
                 return;
             }
 
-            // Meminta konfirmasi dari pengguna
             Console.WriteLine("Apakah Anda yakin ingin menghapus data ini? (Y/N): ");
             char confirmation = Convert.ToChar(Console.ReadLine().ToUpper());
             if (confirmation == 'Y')
@@ -477,7 +475,6 @@ namespace Delete_data
                 return;
             }
 
-            // Periksa apakah ID Almarhumm sudah ada dalam database
             string queryCheckId = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
             SqlCommand cmdCheckId = new SqlCommand(queryCheckId, conn);
             cmdCheckId.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
