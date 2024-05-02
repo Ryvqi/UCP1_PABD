@@ -460,7 +460,6 @@ namespace Delete_data
             }
         }
 
-        // Method untuk memberikan kesaksian
         public void ProvideTestimony(SqlConnection conn)
         {
             Console.WriteLine("Berikan kesaksian atas kematian");
@@ -528,6 +527,5 @@ namespace Delete_data
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
-
     }
 }
