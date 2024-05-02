@@ -135,7 +135,7 @@ namespace Delete_data
                 Console.WriteLine("Penyebab_Kematian: " + reader["Penyebab_Kematian"].ToString());
                 Console.WriteLine();
             }
-            reader.Close(); 
+            reader.Close();
         }
 
         // Method untuk mendapatkan nilai DateTime dari SqlDataReader dengan penanganan nilai null
@@ -150,9 +150,14 @@ namespace Delete_data
         {
             Console.WriteLine("Masukkan Id Almarhumm: ");
             string Id_Almarhumm = Console.ReadLine();
-            if (string.IsNullOrEmpty(Id_Almarhumm))
+            if (string.IsNullOrWhiteSpace(Id_Almarhumm))
             {
                 Console.WriteLine("ID tidak boleh kosong.");
+                return;
+            }
+            if (!int.TryParse(Id_Almarhumm, out _))
+            {
+                Console.WriteLine("ID harus berupa angka.");
                 return;
             }
 
@@ -168,6 +173,16 @@ namespace Delete_data
 
             Console.WriteLine("Masukkan Nama Almarhumm: ");
             string Nama = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(Nama))
+            {
+                Console.WriteLine("Nama tidak boleh kosong.");
+                return;
+            }
+            if (int.TryParse(Nama, out _))
+            {
+                Console.WriteLine("Nama tidak boleh berupa angka.");
+                return;
+            }
 
             // Check if the record already exists
             queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Nama = @Nama";
@@ -181,11 +196,33 @@ namespace Delete_data
             }
 
             Console.WriteLine("Masukkan Tanggal Lahir (yyyy-MM-dd): ");
-            DateTime Tgl_Lahir = DateTime.Parse(Console.ReadLine());
+            string Tgl_Lahir_Input = Console.ReadLine();
+            if (!DateTime.TryParse(Tgl_Lahir_Input, out DateTime Tgl_Lahir))
+            {
+                Console.WriteLine("Format tanggal tidak valid.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Tanggal Kematian (yyyy-MM-dd): ");
-            DateTime Tgl_Kematian = DateTime.Parse(Console.ReadLine());
+            string Tgl_Kematian_Input = Console.ReadLine();
+            if (!DateTime.TryParse(Tgl_Kematian_Input, out DateTime Tgl_Kematian))
+            {
+                Console.WriteLine("Format tanggal tidak valid.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Penyebab Kematian: ");
             string Penyebab_Kematian = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(Penyebab_Kematian))
+            {
+                Console.WriteLine("Penyebab kematian tidak boleh kosong.");
+                return;
+            }
+            if (int.TryParse(Penyebab_Kematian, out _))
+            {
+                Console.WriteLine("Penyebab kematian tidak boleh berupa angka.");
+                return;
+            }
 
             string query = "INSERT INTO Almarhumm (Id_Almarhumm, Nama, Tgl_Lahir, Tgl_Kematian, Penyebab_Kematian)" +
                 "VALUES (@Id_Almarhumm, @Nama, @Tgl_Lahir, @Tgl_Kematian, @Penyebab_Kematian)";
@@ -211,6 +248,17 @@ namespace Delete_data
         {
             Console.WriteLine("Masukkan ID Almarhumm yang akan dihapus: ");
             string Id_Almarhumm = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(Id_Almarhumm))
+            {
+                Console.WriteLine("ID tidak boleh kosong.");
+                return;
+            }
+            if (!int.TryParse(Id_Almarhumm, out _))
+            {
+                Console.WriteLine("ID harus berupa angka.");
+                return;
+            }
+
             string queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
             SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
             cmdCheck.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
@@ -254,9 +302,14 @@ namespace Delete_data
         {
             Console.WriteLine("Masukkan ID Almarhumm yang akan diperbarui: ");
             string Id_Almarhumm = Console.ReadLine();
-            if (string.IsNullOrEmpty(Id_Almarhumm))
+            if (string.IsNullOrWhiteSpace(Id_Almarhumm))
             {
                 Console.WriteLine("ID tidak boleh kosong.");
+                return;
+            }
+            if (!int.TryParse(Id_Almarhumm, out _))
+            {
+                Console.WriteLine("ID harus berupa angka.");
                 return;
             }
 
@@ -272,12 +325,45 @@ namespace Delete_data
 
             Console.WriteLine("Masukkan Nama Almarhumm: ");
             string newNama = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newNama))
+            {
+                Console.WriteLine("Nama tidak boleh kosong.");
+                return;
+            }
+            if (int.TryParse(newNama, out _))
+            {
+                Console.WriteLine("Nama tidak boleh berupa angka.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Tanggal Lahir (yyyy-MM-dd): ");
-            DateTime newTglLahir = DateTime.Parse(Console.ReadLine());
+            string newTglLahirInput = Console.ReadLine();
+            if (!DateTime.TryParse(newTglLahirInput, out DateTime newTglLahir))
+            {
+                Console.WriteLine("Format tanggal tidak valid.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Tanggal Kematian (yyyy-MM-dd): ");
-            DateTime newTglKematian = DateTime.Parse(Console.ReadLine());
+            string newTglKematianInput = Console.ReadLine();
+            if (!DateTime.TryParse(newTglKematianInput, out DateTime newTglKematian))
+            {
+                Console.WriteLine("Format tanggal tidak valid.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Penyebab Kematian: ");
             string newPenyebabKematian = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(newPenyebabKematian))
+            {
+                Console.WriteLine("Penyebab kematian tidak boleh kosong.");
+                return;
+            }
+            if (int.TryParse(newPenyebabKematian, out _))
+            {
+                Console.WriteLine("Penyebab kematian tidak boleh berupa angka.");
+                return;
+            }
 
             try
             {
@@ -314,17 +400,38 @@ namespace Delete_data
         {
             Console.WriteLine("Masukkan Id_Almarhumm: ");
             string Id_Almarhumm = Console.ReadLine();
-            if (string.IsNullOrEmpty(Id_Almarhumm))
+            if (string.IsNullOrWhiteSpace(Id_Almarhumm))
             {
                 Console.WriteLine("ID tidak boleh kosong.");
+                return;
+            }
+            if (!int.TryParse(Id_Almarhumm, out _))
+            {
+                Console.WriteLine("ID harus berupa angka.");
                 return;
             }
 
             Console.WriteLine("\nMasukkan detail tentang kematian:");
             Console.WriteLine("Masukkan Tanggal Kematian (yyyy-MM-dd): ");
-            DateTime tglKematian = DateTime.Parse(Console.ReadLine());
+            DateTime tglKematian;
+            if (!DateTime.TryParse(Console.ReadLine(), out tglKematian))
+            {
+                Console.WriteLine("Format tanggal tidak valid.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Penyebab Kematian: ");
             string penyebabKematian = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(penyebabKematian))
+            {
+                Console.WriteLine("Penyebab kematian tidak boleh kosong.");
+                return;
+            }
+            if (int.TryParse(penyebabKematian, out _))
+            {
+                Console.WriteLine("Penyebab kematian tidak boleh berupa angka.");
+                return;
+            }
 
             try
             {
@@ -358,19 +465,50 @@ namespace Delete_data
         {
             Console.WriteLine("Berikan kesaksian atas kematian");
 
-            Console.WriteLine("Masukkan Informasi tentang orang yang meninggal: ");
-            string Id_Records = Console.ReadLine();
+            Console.WriteLine("Masukkan Informasi tentang orang yang meninggal (ID Almarhumm): ");
+            string Id_Almarhumm = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(Id_Almarhumm))
+            {
+                Console.WriteLine("ID Almarhumm tidak boleh kosong.");
+                return;
+            }
+            if (!int.TryParse(Id_Almarhumm, out _))
+            {
+                Console.WriteLine("ID Almarhumm harus berupa angka.");
+                return;
+            }
+
+            // Periksa apakah ID Almarhumm sudah ada dalam database
+            string queryCheckId = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
+            SqlCommand cmdCheckId = new SqlCommand(queryCheckId, conn);
+            cmdCheckId.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
+            int existingRecords = (int)cmdCheckId.ExecuteScalar();
+            if (existingRecords == 0)
+            {
+                Console.WriteLine("ID Almarhumm yang dimasukkan tidak ditemukan dalam database.");
+                return;
+            }
 
             Console.WriteLine("Masukkan kesaksian Anda: ");
             string Detail = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(Detail))
+            {
+                Console.WriteLine("Detail tidak boleh kosong.");
+                return;
+            }
+            if (int.TryParse(Detail, out _))
+            {
+                Console.WriteLine("Detail tidak boleh berupa angka.");
+                return;
+            }
 
             try
             {
-                string query = "INSERT INTO Catatan_kematian (Id_Records, Detail) VALUES (@Id_Records, @Detail)";
+                string query = "INSERT INTO Catatan_kematian (Id_Records, Detail) VALUES (@Id_Almarhumm, @Detail)";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Id_Records", Id_Records);
+                    cmd.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
                     cmd.Parameters.AddWithValue("@Detail", Detail);
 
                     int rowsAffected = cmd.ExecuteNonQuery();
@@ -390,5 +528,6 @@ namespace Delete_data
                 Console.WriteLine("Error: " + ex.Message);
             }
         }
+
     }
 }
