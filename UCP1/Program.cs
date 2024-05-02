@@ -14,7 +14,7 @@ namespace Delete_data
                 try
                 {
                     Console.Write("\nKetik E untuk terhubung ke database atau Q untuk keluar dari aplikasi: ");
-                    char chr = Convert.ToChar(Console.ReadLine().ToUpper()); // Konversi input menjadi huruf besar
+                    char chr = Convert.ToChar(Console.ReadLine().ToUpper());
                     switch (chr)
                     {
                         case 'E':
@@ -135,7 +135,7 @@ namespace Delete_data
                 Console.WriteLine("Penyebab_Kematian: " + reader["Penyebab_Kematian"].ToString());
                 Console.WriteLine();
             }
-            reader.Close(); // Close the SqlDataReader after reading data
+            reader.Close(); 
         }
 
         // Method untuk mendapatkan nilai DateTime dari SqlDataReader dengan penanganan nilai null
@@ -156,7 +156,6 @@ namespace Delete_data
                 return;
             }
 
-            // Check if the record already exists
             string queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
             SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
             cmdCheck.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
@@ -169,6 +168,18 @@ namespace Delete_data
 
             Console.WriteLine("Masukkan Nama Almarhumm: ");
             string Nama = Console.ReadLine();
+
+            // Check if the record already exists
+            queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Nama = @Nama";
+            cmdCheck = new SqlCommand(queryCheck, conn);
+            cmdCheck.Parameters.AddWithValue("@Nama", Nama);
+            existingRecords = (int)cmdCheck.ExecuteScalar();
+            if (existingRecords > 0)
+            {
+                Console.WriteLine("Data dengan Nama yang sama sudah ada.");
+                return;
+            }
+
             Console.WriteLine("Masukkan Tanggal Lahir (yyyy-MM-dd): ");
             DateTime Tgl_Lahir = DateTime.Parse(Console.ReadLine());
             Console.WriteLine("Masukkan Tanggal Kematian (yyyy-MM-dd): ");
@@ -200,8 +211,6 @@ namespace Delete_data
         {
             Console.WriteLine("Masukkan ID Almarhumm yang akan dihapus: ");
             string Id_Almarhumm = Console.ReadLine();
-
-            // Check if the record exists
             string queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
             SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
             cmdCheck.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
@@ -212,17 +221,31 @@ namespace Delete_data
                 return;
             }
 
-            string query = "DELETE FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
-            int rowsAffected = cmd.ExecuteNonQuery();
-            if (rowsAffected > 0)
+            // Meminta konfirmasi dari pengguna
+            Console.WriteLine("Apakah Anda yakin ingin menghapus data ini? (Y/N): ");
+            char confirmation = Convert.ToChar(Console.ReadLine().ToUpper());
+            if (confirmation == 'Y')
             {
-                Console.WriteLine("Data Almarhumm berhasil dihapus.");
+                string query = "DELETE FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
+                int rowsAffected = cmd.ExecuteNonQuery();
+                if (rowsAffected > 0)
+                {
+                    Console.WriteLine("Data Almarhumm berhasil dihapus.");
+                }
+                else
+                {
+                    Console.WriteLine("Gagal menghapus data almarhumm.");
+                }
+            }
+            else if (confirmation == 'N')
+            {
+                Console.WriteLine("Penghapusan data dibatalkan.");
             }
             else
             {
-                Console.WriteLine("Gagal menghapus data almarhumm.");
+                Console.WriteLine("Input tidak valid.");
             }
         }
 
@@ -237,7 +260,6 @@ namespace Delete_data
                 return;
             }
 
-            // Check if the record exists
             string queryCheck = "SELECT COUNT(*) FROM Almarhumm WHERE Id_Almarhumm = @Id_Almarhumm";
             SqlCommand cmdCheck = new SqlCommand(queryCheck, conn);
             cmdCheck.Parameters.AddWithValue("@Id_Almarhumm", Id_Almarhumm);
